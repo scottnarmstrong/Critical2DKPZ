@@ -1,0 +1,13 @@
+{
+  "challenge_module": "Critical2DKPZAudit.Challenge",
+  "solution_module": "Critical2DKPZAudit.Solution",
+  "theorem_names": [
+    "Critical2DKPZAudit.criticalKPZ_main"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "enable_nanoda": true
+}

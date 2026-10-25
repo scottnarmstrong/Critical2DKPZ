@@ -1,0 +1,151 @@
+# Verify main pushes, pull requests targeting main, and manual runs.
+name: Comparators
+"on":
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: comparators-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  LANDRUN_REV: "811cfff51ceaf3d9843708aa6d22e9b84ccac8b4"
+  NANODA_REV: "68d5ca9db226849b41a6fff59d796ff19d0a8840"
+jobs:
+  comparator:
+    name: Comparator and NanoDa audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Free runner disk space
+        run: |
+          set -Eeuo pipefail
+          # Only remove unused SDKs on disposable hosted runners.
+          if [[ "${RUNNER_ENVIRONMENT:-}" == github-hosted ]]; then
+            sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL \
+              /usr/local/share/boost /usr/share/swift /usr/local/.ghcup /usr/local/share/powershell \
+              /usr/local/share/chromium /opt/microsoft /opt/google /opt/az
+            sudo docker image prune --all --force > /dev/null || true
+          fi
+          df -h .
+          available_kib="$(df -Pk . | awk 'NR==2 {print $4}')"
+          test "$available_kib" -ge 20971520
+      - name: Install Linux sandbox prerequisites
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq >/dev/null
+          sudo apt-get install -y -qq bubblewrap >/dev/null
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Set up Lean and Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          build: false
+          use-mathlib-cache: true
+      - name: Check public top-level names against dependencies
+        run: python3 scripts/release/check_toplevel_names.py --root .
+      - name: Check Lean modules and comparator configuration
+        run: python3 scripts/verify_modules.py --root .
+      - name: Validate formalization metadata and published theorem lists
+        run: |
+          set -Eeuo pipefail
+          python3 -m venv "$RUNNER_TEMP/metadata-validator"
+          "$RUNNER_TEMP/metadata-validator/bin/python" -m pip install --disable-pip-version-check 'PyYAML==6.0.3' 'jsonschema==4.26.0'
+          "$RUNNER_TEMP/metadata-validator/bin/python" scripts/verify_metadata.py --root .
+      - name: Restore project build artifacts
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: lake-cmp-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            lake-cmp-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
+            lake-build-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
+      - name: Restore verification tools
+        id: tools-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/tools
+          key: kpz-cmp-tools-${{ hashFiles('scripts/verify_comparator.sh', 'lean-toolchain') }}-${{ env.LANDRUN_REV }}-${{ env.NANODA_REV }}
+      - name: Set up Go for landrun
+        if: steps.tools-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - name: Build landrun
+        if: steps.tools-cache.outputs.cache-hit != 'true'
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$HOME/tools/bin"
+          CGO_ENABLED=0 GOBIN="$HOME/tools/bin" go install "github.com/zouuup/landrun/cmd/landrun@$LANDRUN_REV"
+      - name: Build NanoDa
+        if: steps.tools-cache.outputs.cache-hit != 'true'
+        run: |
+          set -Eeuo pipefail
+          command -v cargo >/dev/null || {
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          }
+          export PATH="$HOME/.cargo/bin:$PATH"
+          rm -rf "$HOME/tools/nanoda_lib"
+          git clone --filter=blob:none https://github.com/robsimmons/nanoda_lib "$HOME/tools/nanoda_lib"
+          git -C "$HOME/tools/nanoda_lib" checkout --detach "$NANODA_REV"
+          cd "$HOME/tools/nanoda_lib"
+          cargo build --release --locked
+      - name: Build the audit library
+        run: |
+          set -Eeuo pipefail
+          lake build Critical2DKPZAudit
+          # Lake's per-module setup files (about 5 MB each) are not needed once the build is done.
+          find .lake/build/ir -name '*.setup.json' -delete
+          df -h .
+      - name: Add swap space for the NanoDa replay
+        run: |
+          set -Eeuo pipefail
+          if [[ "${RUNNER_ENVIRONMENT:-}" == github-hosted ]]; then
+            sudo fallocate -l 16G /mnt/comparator.swap
+            sudo chmod 600 /mnt/comparator.swap
+            sudo mkswap /mnt/comparator.swap >/dev/null
+            sudo swapon /mnt/comparator.swap
+          fi
+          free -h
+      - name: Run comparator with NanoDa
+        run: |
+          set -Eeuo pipefail
+          export KPZ_COMPARATOR_CACHE="$HOME/tools/critical2dkpz-comparator"
+          export PATH="$HOME/tools/bin:$HOME/tools/nanoda_lib/target/release:$PATH"
+          mkdir -p "$RUNNER_TEMP/comparator-logs"
+          scripts/verify_comparator.sh 2>&1 | tee "$RUNNER_TEMP/comparator-logs/comparator.log"
+      - name: Check verification tools
+        id: tools-ok
+        if: always() && steps.tools-cache.outputs.cache-hit != 'true'
+        run: |
+          test -x "$HOME/tools/bin/landrun"
+          test -x "$HOME/tools/nanoda_lib/target/release/nanoda_bin"
+      - name: Save verification tools
+        if: always() && steps.tools-cache.outputs.cache-hit != 'true' && steps.tools-ok.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/tools
+          key: kpz-cmp-tools-${{ hashFiles('scripts/verify_comparator.sh', 'lean-toolchain') }}-${{ env.LANDRUN_REV }}-${{ env.NANODA_REV }}
+      - name: Save project build artifacts
+        if: always() && steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: lake-cmp-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
+      - name: Upload comparator log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparator-logs
+          path: ${{ runner.temp }}/comparator-logs/*.log
+          if-no-files-found: ignore

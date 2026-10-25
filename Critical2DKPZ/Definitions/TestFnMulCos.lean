@@ -1,0 +1,51 @@
+/-
+Copyright (c) 2026 Scott Armstrong. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong
+-/
+module
+
+public import Mathlib.Probability.ProductMeasure
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.MeasureTheory.Function.ConvergenceInDistribution
+public import Mathlib.Topology.ContinuousMap.CompactlySupported
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Algebra.Order.Round
+public import Mathlib.Analysis.Distribution.Distribution
+public import Mathlib.Probability.Moments.Covariance
+public import Mathlib.Probability.CDF
+public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+public import Mathlib.Probability.Moments.Variance
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Critical2DKPZ.Definitions.Plane
+public import Critical2DKPZ.Definitions.TestFn
+
+@[expose] public section
+
+noncomputable section
+
+open MeasureTheory ProbabilityTheory Filter TopologicalSpace
+open scoped CompactlySupported Distributions BoundedContinuousFunction ENNReal Pointwise
+
+namespace Critical2DKPZ
+
+namespace TestFn
+
+/-- `x ↦ χ x cos ⟪ξ, x⟫`. -/
+def mulCos (χ : TestFn) (ξ : Plane) : TestFn where
+  toFun x := χ x * Real.cos (inner ℝ ξ x)
+  contDiff' := χ.contDiff.mul (Real.contDiff_cos.comp (innerSL ℝ ξ).contDiff)
+  hasCompactSupport' := χ.hasCompactSupport.mul_right
+  tsupport_subset' := fun _ _ => trivial
+
+end TestFn
+
+end Critical2DKPZ
+
+end
+
+end

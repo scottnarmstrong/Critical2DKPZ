@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: >-
+  If you use this formalization, please cite it as below, together with the
+  paper it formalizes. Scott Armstrong was supported by the European Research
+  Council (ERC) under the European Union's Horizon Europe research and
+  innovation programme, grant agreement No. 101200828.
+title: "The Critical 2D KPZ Process: a Lean formalization"
+type: software
+authors:
+  - family-names: Armstrong
+    given-names: Scott
+    affiliation: "CNRS and Laboratoire Jacques-Louis Lions, Sorbonne Université; Courant Institute School of Mathematics, Computing, and Data Science, New York University"
+license: Apache-2.0
+keywords:
+  - Lean
+  - Mathlib
+  - formal verification
+  - KPZ
+references:
+  - type: article
+    title: "The Critical 2D KPZ Process"
+    status: preprint
+    url: "https://arxiv.org/abs/2610.31614"
+    authors:
+      - family-names: Berger
+        given-names: Quentin
+      - family-names: Caravenna
+        given-names: Francesco
+      - family-names: Clark
+        given-names: Jeremy
+      - family-names: Dunlap
+        given-names: Alexander
+      - family-names: Gu
+        given-names: Yu
+      - family-names: Liu
+        given-names: Ziyang
+      - family-names: Nakajima
+        given-names: Shuta
+      - family-names: Sun
+        given-names: Rongfeng
+      - family-names: Tsai
+        given-names: Li-Cheng
+      - family-names: Xie
+        given-names: Zuodi
+      - family-names: Zygouras
+        given-names: Nikos

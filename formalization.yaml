@@ -1,0 +1,536 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "The Critical 2D KPZ Process"
+  description: >-
+    A Lean 4 formalization of "The Critical 2D KPZ Process" by Berger,
+    Caravenna, Clark, Dunlap, Gu, Liu, Nakajima, Sun, Tsai, Xie and Zygouras
+    (arXiv:2610.31614, version 1), together with selected inputs and adaptations
+    in the form these proofs need. For directed polymers on Z^2 in a Gaussian
+    environment at critical disorder, it proves the existence of a critical 2D
+    stochastic heat flow, defined as the joint limit in law of the rescaled
+    partition functions (Theorem A). The centred log-partition function
+    converges in law, in the local negative Sobolev spaces H^{-a}_loc and
+    jointly in finitely many times and initial data, to the critical 2D KPZ
+    process (Theorem 1.2). The process satisfies the comparison principle in
+    the initial data. For flat initial data, its averages at scale epsilon,
+    divided by sqrt(log log(1/epsilon)), converge in law to a centred Gaussian
+    (Theorem 1.4(i)); it has a radial covariance kernel equivalent to
+    log log(1/|z|) at the diagonal (Theorem 1.4(ii)), is not a signed measure
+    (Proposition 1.5), is not Gaussian (Theorem 1.6), is invariant under
+    translations and rotations and covariant under scaling (Proposition 1.8),
+    and its pairing with each nonnegative test function has a law of Ehrhard
+    type (Proposition 3.8). The parameter theta is fixed. Built on Mathlib,
+    using only Lean's standard axioms.
+  authors:
+    - "Scott Armstrong"
+  responsible_maintainers:
+    - "Scott Armstrong"
+  license: "Apache-2.0"
+  funding:
+    - "Scott Armstrong was supported by the European Research Council (ERC) under the European Union's Horizon Europe research and innovation programme, grant agreement No. 101200828."
+
+classification:
+  arxiv: ["math.PR", "math-ph"]
+  msc2020: ["60H17", "60F17", "60G60", "82D60"]
+
+sources:
+  - title: "The Critical 2D KPZ Process"
+    authors:
+      - "Quentin Berger"
+      - "Francesco Caravenna"
+      - "Jeremy Clark"
+      - "Alexander Dunlap"
+      - "Yu Gu"
+      - "Ziyang Liu"
+      - "Shuta Nakajima"
+      - "Rongfeng Sun"
+      - "Li-Cheng Tsai"
+      - "Zuodi Xie"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "arXiv:2610.31614"
+    relationship: "formalizes"
+    note: >-
+      All main results: Theorem A, Theorem 1.2 with Remark 6.5, the comparison
+      principle, Theorem 1.4(i)-(ii), Proposition 1.5, Theorem 1.6, Proposition
+      1.8, Proposition 3.8 and equation (1.16) with Lemma 4.3, and the key
+      intermediate results (Theorems 3.1, 5.1, 8.1, Lemmas 3.6, 5.3, B.2,
+      Propositions 4.1, 4.4-4.5). Numbering refers to arXiv version 1 (22 October 2026). Errata
+      and deviations are listed in docs/ERRATA-AND-DEVIATIONS.md.
+    author_endorsement: "not-contacted"
+  - title: "The Parisi formula has a unique minimizer"
+    authors:
+      - "Antonio Auffinger"
+      - "Wei-Kuo Chen"
+    type: "paper"
+    location: "Communications in Mathematical Physics 335 (2015), 1429–1444, DOI 10.1007/s00220-014-2254-z; arXiv:1402.5132v3"
+    relationship: "adapts"
+    note: "AC15: Convex Gaussian specialization of Proposition 1, with all positive exponential moments, follows from FMP25 and NP16; no Parisi or stochastic-control theorem."
+    author_endorsement: "not-contacted"
+  - title: "Strong Disorder for Stochastic Heat Flow and 2D Directed Polymers"
+    authors:
+      - "Quentin Berger"
+      - "Francesco Caravenna"
+      - "Nicola Turchi"
+    type: "paper"
+    location: "preprint (2025; pinned revision 2026), arXiv:2508.02478v3"
+    relationship: "background"
+    note: "BCT25: No listed strong-disorder or uniform variance theorem is formalized; notation and methodological context only."
+    author_endorsement: "not-contacted"
+  - title: "Concentration functions and entropy bounds for discrete log-concave distributions"
+    authors:
+      - "Sergey G. Bobkov"
+      - "Arnaud Marsiglietti"
+      - "James Melbourne"
+    type: "paper"
+    location: "Combinatorics, Probability and Computing 31 (2022), DOI 10.1017/S096354832100016X; arXiv:2007.11030v2"
+    relationship: "adapts"
+    note: "BMM22: Finite symmetric probability profiles, positive on their finite interval support and log-concave, satisfy the adapted central-atom bound with constant 487 in its stated moment normalization, including the half-integer-centered version; finite convolution closure is also proved."
+    author_endorsement: "not-contacted"
+  - title: "Fractional moments of the Stochastic Heat Flow and 2D Directed Polymers"
+    authors:
+      - "Quentin Berger"
+      - "Nicola Turchi"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "preprint (2026), arXiv:2608.13359v1"
+    relationship: "background"
+    note: "BTZ26: No listed parameter-uniform fractional-moment or variance theorem is formalized."
+    author_endorsement: "not-contacted"
+  - title: "Quasi-critical fluctuations for 2D directed polymers"
+    authors:
+      - "Francesco Caravenna"
+      - "Francesca Cottini"
+      - "Maurizia Rossi"
+    type: "paper"
+    location: "Annals of Applied Probability 35 (2025), no. 4, 2604–2643; arXiv:2307.02453v3"
+    relationship: "adapts"
+    note: "CCR25: Fourth- and sixth-moment bounds for the planar Gaussian polymer with terminal test function 1, using the collision-word expansion; the algebraic bound with a finite configuration cutoff, at arbitrary particle order, remains conditional on its stated partition-moment and operator bounds."
+    author_endorsement: "not-contacted"
+  - title: "On the central limit theorem for the log-partition function of 2D directed polymers"
+    authors:
+      - "Clément Cosco"
+      - "Anna Donadini"
+    type: "paper"
+    location: "Electronic Communications in Probability 30 (2025), paper 86, 1–11; arXiv:2402.14647v2"
+    relationship: "background"
+    note: "CD25: No listed subcritical central limit theorem or dyadic decoupling theorem is formalized; block-factorization precursor only."
+    author_endorsement: "not-contacted"
+  - title: "A Gaussian Convexity for Logarithmic Moment Generating Functions with Applications in Spin Glasses"
+    authors:
+      - "Wei-Kuo Chen"
+    type: "paper"
+    location: "Annales de l’Institut Henri Poincaré, Probabilités et Statistiques 62 (2026), no. 1, 195–206; arXiv:2311.08351v2"
+    relationship: "adapts"
+    note: "Chen26: Normalized log-moment-generating-function convexity at all real orders, including the mean at zero, for finite convex functions of any finite-dimensional Gaussian with all positive exponential moments. No spin-glass applications."
+    author_endorsement: "not-contacted"
+  - title: "On planar Brownian motion singularly tilted through a point potential"
+    authors:
+      - "Jeremy Clark"
+      - "Barkat Mian"
+    type: "paper"
+    location: "arXiv:2306.14849 (2023 preprint)"
+    relationship: "background"
+    note: "CM25: The local-time existence and occupation-approximation theorems are not formalized."
+    author_endorsement: "not-contacted"
+  - title: "Continuum polymer measures corresponding to the critical 2d stochastic heat flow"
+    authors:
+      - "Jeremy Clark"
+      - "Barkat Mian"
+    type: "paper"
+    location: "Communications in Mathematical Physics 407 (2026), article 152; arXiv:2409.01510v1; DOI 10.1007/s00220-026-05677-3"
+    relationship: "adapts"
+    note: "CM26: Finite-slab annealing, limiting conditional bounds, approximate composition and dense-time flow are proved for the Gaussian period-two polymer, together with the Euler-shifted Gamma-integral dictionary. The supporting moment, sixth-moment, semigroup and comparison hypotheses are supplied for this model. The source’s mollified-SHE conditional-mean proposition, continuum path-space construction and Volterra-derivative identity are not asserted verbatim."
+    author_endorsement: "not-contacted"
+  - title: "Universality in marginally relevant disordered systems"
+    authors:
+      - "Francesco Caravenna"
+      - "Rongfeng Sun"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "Annals of Applied Probability 27 (2017), no. 5, 3050–3112. DOI: 10.1214/17-AAP1276. arXiv: 1510.06287"
+    relationship: "background"
+    note: "CSZ17b: No listed universality, subcritical field-limit or multiscale-correlation theorem is formalized."
+    author_endorsement: "not-contacted"
+  - title: "The Dickman subordinator, renewal theorems, and disordered systems"
+    authors:
+      - "Francesco Caravenna"
+      - "Rongfeng Sun"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "Electronic Journal of Probability 24 (2019), paper 101, 1–40. DOI: 10.1214/19-EJP353. arXiv: 1805.01465v4"
+    relationship: "adapts"
+    note: "CSZ19a: For the planar nearest-neighbor simple symmetric random walk, scalar and reachable-parity spatial renewal limits, leading scalar-density asymptotics and logarithmic bounds, and Gaussian free-polymer second moments; no general renewal-law or stochastic-subordinator theorem."
+    author_endorsement: "not-contacted"
+  - title: "On the moments of the (2+1)-dimensional directed polymer and stochastic heat equation in the critical window"
+    authors:
+      - "Francesco Caravenna"
+      - "Rongfeng Sun"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "Communications in Mathematical Physics 372 (2019), 385–440. DOI: 10.1007/s00220-019-03527-z. arXiv: 1808.03586v2"
+    relationship: "adapts"
+    note: "CSZ19b: Exact finite Gaussian planar polarized first-collision identity for probability profiles and its heat-profile specialization, with terminal disorder included; no printed critical-window third-moment limit."
+    author_endorsement: "not-contacted"
+  - title: "The two-dimensional KPZ equation in the entire subcritical regime"
+    authors:
+      - "Francesco Caravenna"
+      - "Rongfeng Sun"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "Annals of Probability 48 (2020), no. 3, 1086–1127. DOI: 10.1214/19-AOP1383. arXiv: 1812.03911v3"
+    relationship: "background"
+    note: "CSZ20: No listed fixed-subcritical KPZ limit or source localization theorem is formalized."
+    author_endorsement: "not-contacted"
+  - title: "The critical 2d stochastic heat flow"
+    authors:
+      - "F. Caravenna"
+      - "R. Sun"
+      - "N. Zygouras"
+    type: "paper"
+    location: "Inventiones Mathematicae 233 (2023), doi: [10.1007/s00222-023-01184-7](https://doi.org/10.1007/s00222-023-01184-7), arXiv:2109.03766v3"
+    relationship: "adapts"
+    note: "CSZ23: SHF existence, symmetries and covariance are proved for the Gaussian planar simple-walk model, together with squared-binomial exponential-moment and replica-Green bilinear estimates. The dense-limit and uniqueness hypotheses of the supporting existence lemma are supplied for this model. The source’s general-disorder universality theorem is not formalized, and no identification with its construction is asserted."
+    author_endorsement: "not-contacted"
+  - title: "Singularity and regularity of the critical 2D stochastic heat flow"
+    authors:
+      - "Francesco Caravenna"
+      - "Rongfeng Sun"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "Probability Theory and Related Fields (to appear); arXiv:2504.06128v2 (2025)"
+    relationship: "adapts"
+    note: "CSZ25: Fourth- and sixth-moment bounds are proved for the Gaussian planar polymer with terminal test function 1, including geometric blocks. Almost-sure mutual singularity of the SHF terminal marginal with each deterministic finite measure is proved; the supporting variance-defect, symmetry, heat-start and dense-flow hypotheses are supplied for this model. The full source ball-density theorem is not formalized."
+    author_endorsement: "not-contacted"
+  - title: "The critical 2d stochastic heat flow and related models"
+    authors:
+      - "F. Caravenna"
+      - "R. Sun"
+      - "N. Zygouras"
+    type: "paper"
+    location: "lecture notes, arXiv:2412.10311v3 (25 May 2026)"
+    relationship: "adapts"
+    note: "CSZ26: Exact finite Gaussian-disorder chaos expansions for the period-two walk with the KPZ terminal-layer convention; no asymptotic transition or continuum construction theorem."
+    author_endorsement: "not-contacted"
+  - title: "Conditional GMC within the stochastic heat flow"
+    authors:
+      - "Jeremy Clark"
+      - "Li-Cheng Tsai"
+    type: "paper"
+    location: "preprint (2025), arXiv:2507.16056v1"
+    relationship: "background"
+    note: "CT25: No conditional-GMC construction or coupling theorem is formalized."
+    author_endorsement: "not-contacted"
+  - title: "A universality result for the critical 2d stochastic heat flow"
+    authors:
+      - "Hindy Drillick"
+      - "Jonathan Hou"
+      - "Shalin Parekh"
+    type: "paper"
+    location: "arXiv:2609.15832v1 (2026)"
+    relationship: "adapts"
+    note: "DHP26: Moving-time and fixed-time Gaussian polymer moment limits through order four are proved for products of compact endpoint-pair tests, with approximate composition and dense-time flow. The word-domination, non-pair-remainder, word-limit, sixth-moment, semigroup and comparison hypotheses of the supporting lemmas are supplied for this model. No general-disorder universality or arbitrary configuration-test claim is made."
+    author_endorsement: "not-contacted"
+  - title: "On convex functions of Gaussian variables"
+    authors:
+      - "Maite Fernández-Unzueta"
+      - "James Melbourne"
+      - "Gerardo Palafox-Castillo"
+    type: "paper"
+    location: "preprint (2025), arXiv:2510.06676v1"
+    relationship: "adapts"
+    note: "FMP25: Convex-branch log-moment-generating-function comparison on the finite moment domain, assuming `E[e^{rX}] < ∞` for some `r > 0`, and adapted Ehrhard-law representation; no strictness/equality cases, concave branch or full extended-value theorem."
+    author_endorsement: "not-contacted"
+  - title: "Moments of the 2D SHE at criticality"
+    authors:
+      - "Y. Gu"
+      - "J. Quastel"
+      - "L.-C. Tsai"
+    type: "paper"
+    location: "Probability and Mathematical Physics 2 (2021), doi: [10.2140/pmp.2021.2.179](https://doi.org/10.2140/pmp.2021.2.179), arXiv:1905.11310v2"
+    relationship: "adapts"
+    note: "GQT21: Two-particle semigroup law, positive form bounds for every particle number and bounds on real L² bilinear forms through four particles, and adapted scalar/swapping estimates; no all-particle operator-semigroup or mollified-SHE convergence theorem."
+    author_endorsement: "not-contacted"
+  - title: "Log Log Fluctuations of the Stochastic Heat Flow"
+    authors:
+      - "Yu Gu"
+      - "Li-Cheng Tsai"
+    type: "paper"
+    location: "preprint (2026), arXiv:2603.03246v1"
+    relationship: "adapts"
+    note: "GT26: For each process satisfying the stated critical SHF definition, the proved result is the mean-centered, fixed-parameter, delayed heat-start log-log central limit theorem, obtained by a lattice argument; finite block expansions are proved. No moving-parameter/original-centering or conditional-GMC theorem."
+    author_endorsement: "not-contacted"
+  - title: "A boundary value problem and the Ehrhard inequality"
+    authors:
+      - "Paata Ivanisvili"
+    type: "paper"
+    location: "Studia Mathematica 246 (2019), DOI 10.4064/sm170730-22-1; arXiv:1605.04840"
+    relationship: "adapts"
+    note: "Ivan16: Convex-set, sum-one Ehrhard consequence via NP16, for arbitrary finite-dimensional Gaussian laws; no boundary-value or eligible-measure characterization theorem."
+    author_endorsement: "not-contacted"
+  - title: "Moments comparison inequalities for critical 2D stochastic heat flow, polymers and GMC"
+    authors:
+      - "Ziyang Liu"
+      - "Zuodi Xie"
+    type: "paper"
+    location: "preprint (2026), arXiv:2609.12820v1"
+    relationship: "adapts"
+    note: "LX26: Adapted Ehrhard representation and weak closure, finite-domain convexity, normalized negative-moment comparisons and heat-profile log-SHF Ehrhard type are proved. The inverse-moment lower bound at p=−1 is proved for the Gaussian-model SHF; its supporting lemma retains explicit hypotheses, which are supplied in the non-Gaussianity proof. No all-negative-orders lower-bound claim is made."
+    author_endorsement: "not-contacted"
+  - title: "Moments of the 2d directed polymer in the subcritical regime and a generalisation of the Erdős–Taylor theorem"
+    authors:
+      - "Dimitris Lygkonis"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "Communications in Mathematical Physics 401 (2023); arXiv:2109.06115v2"
+    relationship: "adapts"
+    note: "LZ21: Adapted deterministic planar lattice-sum and absolutely summable pair-stratum bilinear estimates with explicit domain/constants; no subcritical moment limit or Erdős–Taylor theorem."
+    author_endorsement: "not-contacted"
+  - title: "On the moments of the mass of shrinking balls under the Critical 2d Stochastic Heat Flow"
+    authors:
+      - "Ziyang Liu"
+      - "Nikos Zygouras"
+    type: "paper"
+    location: "Communications in Mathematical Physics 407 (2026); arXiv:2410.14601v3"
+    relationship: "adapts"
+    note: "LZ26: the inverse-log Laplace-transform formula for the scalar collision density after the parameter change `θ = ϑ − γ`, where `γ` is Euler's constant, together with integrability, positivity, continuity and the leading small-time equivalent; no second correction term or all-order shrinking-ball theorem."
+    author_endorsement: "not-contacted"
+  - title: "An interpolation proof of Ehrhard’s inequality"
+    authors:
+      - "Joe Neeman"
+      - "Grigoris Paouris"
+    type: "paper"
+    location: "in Geometric Aspects of Functional Analysis, Lecture Notes in Mathematics (2020), DOI 10.1007/978-3-030-46762-3_12; arXiv:1605.07233v1"
+    relationship: "adapts"
+    note: "NP16: The corrected sufficient direction of the Ornstein–Uhlenbeck interpolation argument proves the finite-dimensional convex-set Ehrhard inequality, with explicit regularity restrictions; no full measurable Jensen equivalence or necessity theorem."
+    author_endorsement: "not-contacted"
+  - title: "On Gaussian multiplicative chaos"
+    authors:
+      - "Alexander Shamov"
+    type: "paper"
+    location: "Journal of Functional Analysis 270 (2016), DOI 10.1016/j.jfa.2016.03.001; arXiv:1407.4418"
+    relationship: "background"
+    note: "Sha16: No listed abstract GMC existence/approximation, characterization, randomized-shift or Hilbert–Schmidt moment theorem is formalized."
+    author_endorsement: "not-contacted"
+  - title: "Two-dimensional delta Bose gas in a weighted space"
+    authors:
+      - "S. Surendranath"
+      - "L.-C. Tsai"
+    type: "paper"
+    location: "Electronic Communications in Probability 30 (2025), doi: [10.1214/25-ECP685](https://doi.org/10.1214/25-ECP685), arXiv:2410.16550v2"
+    relationship: "adapts"
+    note: "ST25: Corrected limiting ε=0 weighted kernel bounds on compact time intervals, collision-chain summability and the needed four-particle application; no regularized construction/convergence or printed universal chain constant."
+    author_endorsement: "not-contacted"
+  - title: "The equality cases of the Ehrhard–Borell inequality"
+    authors:
+      - "Yair Shenfeld"
+      - "Ramon van Handel"
+    type: "paper"
+    location: "Advances in Mathematics 331 (2018), DOI 10.1016/j.aim.2018.04.013; arXiv:1709.00061"
+    relationship: "adapts"
+    note: "SVH18: Convex-set sum-one special case of Ehrhard–Borell via NP16; no equality-case classification or full nonconvex weighted theorem."
+    author_endorsement: "not-contacted"
+  - title: "Stochastic heat flow by moments"
+    authors:
+      - "L.-C. Tsai"
+    type: "paper"
+    location: "arXiv:2410.14657v3 (16 March 2026)"
+    relationship: "adapts"
+    note: "Tsai24: Uniqueness of finite-dimensional distributions on a dense set of times in a compact interval, under the Chapman–Kolmogorov, independence and moment axioms through order four; four-particle weighted bound for 2<p<∞ and a>0, uniformly on (0,T]. The uniqueness application chooses p>6; no mollified-SHE construction/path continuity."
+    author_endorsement: "not-contacted"
+  - title: "The Borell–Ehrhard game"
+    authors:
+      - "Ramon van Handel"
+    type: "paper"
+    location: "Probability Theory and Related Fields 170 (2018), DOI 10.1007/s00440-017-0762-4; arXiv:1605.00285"
+    relationship: "adapts"
+    note: "VH17: Convex-set sum-one Ehrhard consequence via NP16; no stochastic-game representation or general reverse Brascamp–Lieb theorem."
+    author_endorsement: "not-contacted"
+  - title: "Symétrisation dans l’espace de Gauss"
+    authors:
+      - "A. Ehrhard"
+    type: "paper"
+    location: "Math. Scand. 53 (1983), doi:10.7146/math.scand.a-12035"
+    relationship: "adapts"
+    note: "E83: Finite-threshold convex-set Ehrhard inequality for all finite-dimensional Gaussian laws, including singular covariance, via NP16. Attribution is based on FMP25 and NP16."
+    author_endorsement: "not-contacted"
+  - title: "Gaussian estimates for Markov chains and random walks on groups"
+    authors:
+      - "W. Hebisch"
+      - "L. Saloff-Coste"
+    type: "paper"
+    location: "Ann. Probab. 21 (1993), doi:10.1214/aop/1176989263"
+    relationship: "adapts"
+    note: "HS93: Planar simple-walk Gaussian upper bound and adapted same-parity squared-displacement estimate; no full polynomial-growth-group theorem."
+    author_endorsement: "not-contacted"
+  - title: "Random Walk: A Modern Introduction"
+    authors:
+      - "G. F. Lawler"
+      - "V. Limic"
+    type: "book"
+    location: "Cambridge University Press (2010), doi:10.1017/CBO9780511750854"
+    relationship: "adapts"
+    note: "LL10: Planar nearest-neighbor, parity-correct additive local central limit theorem with C/n² error and Gaussian upper bound; no general-walk relative moderate-deviation expansion."
+    author_endorsement: "not-contacted"
+  - title: "Methods of Modern Mathematical Physics II: Fourier Analysis, Self-Adjointness"
+    authors:
+      - "M. Reed"
+      - "B. Simon"
+    type: "book"
+    location: "Academic Press (1975)"
+    relationship: "adapts"
+    note: "RS75: Positive spectral-measure representation for real even planar locally-L² kernels with explicit polynomial growth and nonnegative compact-test quadratic forms; no arbitrary-dimensional distributional equivalence."
+    author_endorsement: "not-contacted"
+
+related_formalizations: []
+
+status:
+  scope: >-
+    Formalized and proved: the 22 statements listed in docs/main-results.md, namely the
+    ten main results of the paper (Theorem A, Theorem 1.2, the comparison
+    principle, Theorem 1.4(i) and (ii), Proposition 1.5, Theorem 1.6,
+    Proposition 1.8, Proposition 3.8 and the centring asymptotic (1.16)), and
+    twelve key intermediate results, among them Ehrhard's inequality, Gaussian
+    convexity (Theorem 3.1), the local limit theorem for the planar simple
+    random walk, the critical-window second moment, the block moment bounds
+    (Lemma B.2), the log-normality of small-scale SHF averages (Theorem 8.1),
+    the symmetries, time reversal and continuity of the SHF, and the joint
+    convergence of the regularized fields (Theorem 5.1). All statements concern
+    the paper's model: Gaussian disorder, the planar simple random walk and the
+    paper's critical tuning; no universality over the disorder is claimed.
+    Results of other papers are formalized in the form the proofs use, as
+    special cases or adaptations listed in docs/inputs/.
+  sorry_count: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+
+automation:
+  methods:
+    - method: "agent"
+      models:
+        - "claude-opus-5-5"
+        - "claude-sonnet-5-5"
+        - "gpt-6.1-sol"
+        - "gpt-6-luna"
+      framework: >-
+        AI-assisted Lean proof development in Claude Code (Anthropic) and
+        Codex (OpenAI), using the models listed above.
+      tool_setup: >-
+        Lean and Mathlib v4.35.0-rc2, built with Lake; the main statements were
+        separately compared with the paper, including their hypotheses and
+        axiom dependencies.
+      hardware: "one 16-CPU Linux machine"
+  notes: >-
+    Lean code was written with the listed AI models under the author's
+    supervision. The Lean kernel checks the formal proofs; the proof libraries
+    contain no sorry and no custom axiom.
+
+review:
+  status: "author-approved-statements"
+  reviewers:
+    - "Scott Armstrong"
+  notes: >-
+    Scott Armstrong approved the main statements. Separate agent reviews checked
+    the statements against the paper and audited the proofs of the main
+    statements. The authors of the paper have not reviewed the formalization.
+
+alignment:
+  namespace: "Critical2DKPZ"
+  statements:
+    - source: "Theorem A (existence of the critical 2D SHF)"
+      lean: "Critical2DKPZ.exists_isCriticalSHF"
+      module: "Critical2DKPZStatements.ExistsIsCriticalSHF"
+      status: "proved"
+    - source: "Theorem 1.2 and Remark 6.5 (the critical KPZ process)"
+      lean: "Critical2DKPZ.criticalKPZ_main"
+      module: "Critical2DKPZStatements.CriticalKPZMain"
+      status: "proved"
+    - source: "Comparison principle after Theorem 1.2"
+      lean: "Critical2DKPZ.criticalKPZ_comparison"
+      module: "Critical2DKPZStatements.CriticalKPZComparison"
+      status: "proved"
+    - source: "Theorem 1.4(i) (small-scale Gaussianity)"
+      lean: "Critical2DKPZ.criticalKPZ_smallScaleCLT"
+      module: "Critical2DKPZStatements.CriticalKPZSmallScaleCLT"
+      status: "proved"
+    - source: "Theorem 1.4(ii) (covariance kernel)"
+      lean: "Critical2DKPZ.criticalKPZ_covarianceKernel"
+      module: "Critical2DKPZStatements.CriticalKPZCovarianceKernel"
+      status: "proved"
+    - source: "Proposition 1.5 (not a signed measure)"
+      lean: "Critical2DKPZ.criticalKPZ_not_signedMeasure"
+      module: "Critical2DKPZStatements.CriticalKPZNotSignedMeasure"
+      status: "proved"
+    - source: "Theorem 1.6 (non-Gaussianity)"
+      lean: "Critical2DKPZ.criticalKPZ_nonGaussian"
+      module: "Critical2DKPZStatements.CriticalKPZNonGaussian"
+      status: "proved"
+    - source: "Proposition 1.8 (invariance and scaling)"
+      lean: "Critical2DKPZ.criticalKPZ_invariance"
+      module: "Critical2DKPZStatements.CriticalKPZInvariance"
+      status: "proved"
+    - source: "Proposition 3.8 (Ehrhard type)"
+      lean: "Critical2DKPZ.criticalKPZ_isEhrhardType"
+      module: "Critical2DKPZStatements.CriticalKPZIsEhrhardType"
+      status: "proved"
+    - source: "Equation (1.16) and Lemma 4.3 (centring asymptotic)"
+      lean: "Critical2DKPZ.kpzLatticeCentring_asymptotic"
+      module: "Critical2DKPZStatements.KpzLatticeCentringAsymptotic"
+      status: "proved"
+    - source: "Theorem 3.1 (Gaussian convexity)"
+      lean: "Critical2DKPZ.gaussian_convexity"
+      module: "Critical2DKPZStatements.GaussianConvexity"
+      status: "proved"
+    - source: "Ehrhard's inequality for convex sets (FMP25 Theorem 2.1)"
+      lean: "Critical2DKPZ.ehrhard_inequality"
+      module: "Critical2DKPZStatements.EhrhardInequality"
+      status: "proved"
+    - source: "Lemma 3.6 and Remark 3.7 (Ehrhard-type laws)"
+      lean: "Critical2DKPZ.ehrhardType_characterization"
+      module: "Critical2DKPZStatements.EhrhardTypeCharacterization"
+      status: "proved"
+    - source: "Local limit theorem and Gaussian bound for the planar simple walk (Lawler-Limic Theorem 2.3.5 (2.23), Propositions 2.1.2 and 2.4.6; Hebisch-Saloff-Coste)"
+      lean: "Critical2DKPZ.srw_localCLT_gaussianBound"
+      module: "Critical2DKPZStatements.SrwLocalCLTGaussianBound"
+      status: "proved"
+    - source: "Critical-window second moment (CSZ19a Proposition A.2)"
+      lean: "Critical2DKPZ.secondMoment_criticalWindow"
+      module: "Critical2DKPZStatements.SecondMomentCriticalWindow"
+      status: "proved"
+    - source: "Lemma B.2 (block moments)"
+      lean: "Critical2DKPZ.blockMoments"
+      module: "Critical2DKPZStatements.BlockMoments"
+      status: "proved"
+    - source: "SHF symmetries, time reversal and continuity (Sections 1, 5, 6.2)"
+      lean: "Critical2DKPZ.shf_symmetries"
+      module: "Critical2DKPZStatements.ShfSymmetries"
+      status: "proved"
+    - source: "Theorem 8.1 (log-normality of small-scale SHF averages)"
+      lean: "Critical2DKPZ.shf_logNormality"
+      module: "Critical2DKPZStatements.ShfLogNormality"
+      status: "proved"
+    - source: "Proposition 4.1 (one-point moment comparison)"
+      lean: "Critical2DKPZ.prop_VD"
+      module: "Critical2DKPZStatements.PropVD"
+      status: "proved"
+    - source: "Propositions 4.4-4.5 (future-profile comparison, logarithmic tails)"
+      lean: "Critical2DKPZ.prop_PF_logTails"
+      module: "Critical2DKPZStatements.PropPFLogTails"
+      status: "proved"
+    - source: "Lemma 5.3 (lattice smoothing for general initial data)"
+      lean: "Critical2DKPZ.lem_extension_approximation"
+      module: "Critical2DKPZStatements.LemExtensionApproximation"
+      status: "proved"
+    - source: "Theorem 5.1 (joint finite-dimensional convergence)"
+      lean: "Critical2DKPZ.thm_toy_joint"
+      module: "Critical2DKPZStatements.ThmToyJoint"
+      status: "proved"
+
+acknowledgements: >-
+  Built on Lean 4, Mathlib, Lake, leanprover/comparator and NanoDa. The statement of each result follows the
+  paper of Berger, Caravenna, Clark, Dunlap, Gu, Liu, Nakajima, Sun, Tsai, Xie
+  and Zygouras and the papers it cites.
+  Scott Armstrong was supported by the European Research Council (ERC) under
+  the European Union's Horizon Europe research and innovation programme,
+  grant agreement No. 101200828.

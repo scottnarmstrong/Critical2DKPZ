@@ -1,0 +1,78 @@
+# Verify main pushes, pull requests targeting main, and manual runs.
+name: Build and verify
+"on":
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free runner disk space
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          # Only remove preinstalled, unused SDKs on disposable hosted runners.
+          if [[ "${RUNNER_ENVIRONMENT:-}" == github-hosted ]]; then
+            sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/boost /usr/share/swift /usr/local/.ghcup /usr/local/share/powershell \
+            /usr/local/share/chromium /opt/microsoft /opt/google /opt/az
+            sudo docker image prune --all --force > /dev/null || true
+          fi
+          df -h .
+          available_kib="$(df -Pk . | awk 'NR==2 {print $4}')"
+          test "$available_kib" -ge 20971520
+      - name: Install elan
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          curl --proto '=https' --tlsv1.2 -sSf https://elan.lean-lang.org/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+      - name: Check public top-level names against dependencies
+        run: python3 scripts/release/check_toplevel_names.py --root .
+      - name: Check Lean modules and comparator configuration
+        run: python3 scripts/verify_modules.py --root .
+      - name: Validate formalization metadata and published theorem lists
+        run: |
+          set -Eeuo pipefail
+          python3 -m venv "$RUNNER_TEMP/metadata-validator"
+          "$RUNNER_TEMP/metadata-validator/bin/python" -m pip install --disable-pip-version-check 'PyYAML==6.0.3' 'jsonschema==4.26.0'
+          "$RUNNER_TEMP/metadata-validator/bin/python" scripts/verify_metadata.py --root .
+      - name: Restore project build artifacts
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: lake-build-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            lake-build-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
+            lake-cmp-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
+      - name: Build library and theorem statements
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          lake build Critical2DKPZ Critical2DKPZStatements
+          # Lake's per-module setup files (about 5 MB each) are not needed once the build is done.
+          find .lake/build/ir -name '*.setup.json' -delete
+          df -h .
+      - name: Audit theorem axioms
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          lake env lean scripts/PrintAxioms.lean | tee axioms.log
+          "$RUNNER_TEMP/metadata-validator/bin/python" scripts/verify_metadata.py --root . --axiom-log axioms.log
+      - name: Save project build artifacts
+        if: always() && steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: lake-build-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}

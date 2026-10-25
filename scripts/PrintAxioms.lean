@@ -1,0 +1,58 @@
+/-
+Copyright (c) 2026 Scott Armstrong. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong
+-/
+module
+
+public import Critical2DKPZStatements.BlockMoments
+public import Critical2DKPZStatements.CriticalKPZComparison
+public import Critical2DKPZStatements.CriticalKPZCovarianceKernel
+public import Critical2DKPZStatements.CriticalKPZInvariance
+public import Critical2DKPZStatements.CriticalKPZIsEhrhardType
+public import Critical2DKPZStatements.CriticalKPZMain
+public import Critical2DKPZStatements.CriticalKPZNonGaussian
+public import Critical2DKPZStatements.CriticalKPZNotSignedMeasure
+public import Critical2DKPZStatements.CriticalKPZSmallScaleCLT
+public import Critical2DKPZStatements.EhrhardInequality
+public import Critical2DKPZStatements.EhrhardTypeCharacterization
+public import Critical2DKPZStatements.ExistsIsCriticalSHF
+public import Critical2DKPZStatements.GaussianConvexity
+public import Critical2DKPZStatements.KpzLatticeCentringAsymptotic
+public import Critical2DKPZStatements.LemExtensionApproximation
+public import Critical2DKPZStatements.PropPFLogTails
+public import Critical2DKPZStatements.PropVD
+public import Critical2DKPZStatements.SecondMomentCriticalWindow
+public import Critical2DKPZStatements.ShfLogNormality
+public import Critical2DKPZStatements.ShfSymmetries
+public import Critical2DKPZStatements.SrwLocalCLTGaussianBound
+public import Critical2DKPZStatements.ThmToyJoint
+
+/-! # Axiom dependencies of the 22 published theorem exports -/
+
+@[expose] public section
+
+#print axioms Critical2DKPZ.exists_isCriticalSHF
+#print axioms Critical2DKPZ.criticalKPZ_main
+#print axioms Critical2DKPZ.criticalKPZ_comparison
+#print axioms Critical2DKPZ.criticalKPZ_smallScaleCLT
+#print axioms Critical2DKPZ.criticalKPZ_covarianceKernel
+#print axioms Critical2DKPZ.criticalKPZ_not_signedMeasure
+#print axioms Critical2DKPZ.criticalKPZ_nonGaussian
+#print axioms Critical2DKPZ.criticalKPZ_invariance
+#print axioms Critical2DKPZ.criticalKPZ_isEhrhardType
+#print axioms Critical2DKPZ.kpzLatticeCentring_asymptotic
+#print axioms Critical2DKPZ.gaussian_convexity
+#print axioms Critical2DKPZ.ehrhard_inequality
+#print axioms Critical2DKPZ.ehrhardType_characterization
+#print axioms Critical2DKPZ.srw_localCLT_gaussianBound
+#print axioms Critical2DKPZ.secondMoment_criticalWindow
+#print axioms Critical2DKPZ.blockMoments
+#print axioms Critical2DKPZ.shf_symmetries
+#print axioms Critical2DKPZ.shf_logNormality
+#print axioms Critical2DKPZ.prop_VD
+#print axioms Critical2DKPZ.prop_PF_logTails
+#print axioms Critical2DKPZ.lem_extension_approximation
+#print axioms Critical2DKPZ.thm_toy_joint
+
+end

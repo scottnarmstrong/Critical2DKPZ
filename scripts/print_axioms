@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""Run Lean's transitive axiom audit for the 22 published theorem exports.
+
+Run after building Critical2DKPZ and Critical2DKPZStatements; the script locates
+the repository root itself and uses only Lean and Python's standard library.
+"""
+import re
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+MODULES = ('Critical2DKPZStatements.BlockMoments',
+ 'Critical2DKPZStatements.CriticalKPZComparison',
+ 'Critical2DKPZStatements.CriticalKPZCovarianceKernel',
+ 'Critical2DKPZStatements.CriticalKPZInvariance',
+ 'Critical2DKPZStatements.CriticalKPZIsEhrhardType',
+ 'Critical2DKPZStatements.CriticalKPZMain',
+ 'Critical2DKPZStatements.CriticalKPZNonGaussian',
+ 'Critical2DKPZStatements.CriticalKPZNotSignedMeasure',
+ 'Critical2DKPZStatements.CriticalKPZSmallScaleCLT',
+ 'Critical2DKPZStatements.EhrhardInequality',
+ 'Critical2DKPZStatements.EhrhardTypeCharacterization',
+ 'Critical2DKPZStatements.ExistsIsCriticalSHF',
+ 'Critical2DKPZStatements.GaussianConvexity',
+ 'Critical2DKPZStatements.KpzLatticeCentringAsymptotic',
+ 'Critical2DKPZStatements.LemExtensionApproximation',
+ 'Critical2DKPZStatements.PropPFLogTails',
+ 'Critical2DKPZStatements.PropVD',
+ 'Critical2DKPZStatements.SecondMomentCriticalWindow',
+ 'Critical2DKPZStatements.ShfLogNormality',
+ 'Critical2DKPZStatements.ShfSymmetries',
+ 'Critical2DKPZStatements.SrwLocalCLTGaussianBound',
+ 'Critical2DKPZStatements.ThmToyJoint')
+EXPORTS = ('Critical2DKPZ.exists_isCriticalSHF',
+ 'Critical2DKPZ.criticalKPZ_main',
+ 'Critical2DKPZ.criticalKPZ_comparison',
+ 'Critical2DKPZ.criticalKPZ_smallScaleCLT',
+ 'Critical2DKPZ.criticalKPZ_covarianceKernel',
+ 'Critical2DKPZ.criticalKPZ_not_signedMeasure',
+ 'Critical2DKPZ.criticalKPZ_nonGaussian',
+ 'Critical2DKPZ.criticalKPZ_invariance',
+ 'Critical2DKPZ.criticalKPZ_isEhrhardType',
+ 'Critical2DKPZ.kpzLatticeCentring_asymptotic',
+ 'Critical2DKPZ.gaussian_convexity',
+ 'Critical2DKPZ.ehrhard_inequality',
+ 'Critical2DKPZ.ehrhardType_characterization',
+ 'Critical2DKPZ.srw_localCLT_gaussianBound',
+ 'Critical2DKPZ.secondMoment_criticalWindow',
+ 'Critical2DKPZ.blockMoments',
+ 'Critical2DKPZ.shf_symmetries',
+ 'Critical2DKPZ.shf_logNormality',
+ 'Critical2DKPZ.prop_VD',
+ 'Critical2DKPZ.prop_PF_logTails',
+ 'Critical2DKPZ.lem_extension_approximation',
+ 'Critical2DKPZ.thm_toy_joint')
+ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
+
+
+def check_output(log):
+    reports = re.findall(r"'([^']+)' depends on axioms:\s*\[([^]]*)\]", log)
+    reports += [(name, "") for name in re.findall(
+        r"'([^']+)' does not depend on any axioms", log)]
+    names = [name for name, _ in reports]
+    if len(names) != len(EXPORTS) or set(names) != set(EXPORTS):
+        raise ValueError("Expected exactly one axiom report for each of the 22 exports")
+    for name, axioms in reports:
+        unexpected = {x.strip() for x in axioms.split(",") if x.strip()} - ALLOWED
+        if unexpected:
+            raise ValueError(f"{name}: unexpected axioms {sorted(unexpected)}")
+    print("AXIOM AUDIT OK (22 theorem exports; only propext, Classical.choice, Quot.sound)")
+
+
+def main():
+    root = Path(__file__).resolve().parents[1]
+    source = "module\n" + "".join(f"public import {m}\n" for m in MODULES)
+    source += "\n" + "".join(f"#print axioms {n}\n" for n in EXPORTS)
+    with tempfile.TemporaryDirectory(prefix="axiom-audit-", dir=root) as directory:
+        path = Path(directory) / "Audit.lean"
+        path.write_text(source, encoding="utf-8")
+        result = subprocess.run(["lake", "env", "lean", f"--root={root}", str(path)],
+                                cwd=root, text=True, stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT)
+    print(result.stdout, end="")
+    if result.returncode:
+        return result.returncode
+    try:
+        check_output(result.stdout)
+    except ValueError as error:
+        print(f"AXIOM AUDIT FAILED: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
