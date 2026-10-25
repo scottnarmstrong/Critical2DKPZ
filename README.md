@@ -19,9 +19,9 @@ translations and rotations, is covariant under scaling (with the parameter $\var
 with any nonnegative test function has a law of Ehrhard type, that is, the law of $h(G)$ for a standard Gaussian
 $G$ and a finite nondecreasing convex function $h$.
 
-The formalization proves all of these results, together with the results from other papers that their proofs use. The
-libraries `Critical2DKPZ` and `Critical2DKPZStatements` contain no `sorry` and use no axiom beyond Lean's standard
-`propext`, `Classical.choice` and `Quot.sound`.
+The formalization proves these results and Theorems A–D of the note below, together with the specified results from
+other papers that their proofs use. Their proofs use only Lean's standard `propext`, `Classical.choice` and
+`Quot.sound`.
 
 ## The main result
 
@@ -50,13 +50,38 @@ initial condition $h_0$:
   against the initial weight, converge in law to $H_t(h_0)$ in $H^{-a}_{\mathrm{loc}}$, jointly for finitely many times
   and initial conditions.
 
-$H$ is the critical 2D KPZ process. The list of formalized statements has 22 entries: Theorem A and Theorem 1.2; the
-paper's other main
-results (the comparison principle and, for flat initial data, small-scale Gaussianity, the covariance kernel, the facts
-that $H$ is neither a signed measure nor Gaussian, its symmetries, and the Ehrhard property of its tested laws); and
-results, from the paper and
-from the literature, on which their proofs rest. All 22 are stated, with their exact hypotheses and links to the Lean
-statements, in [docs/main-results.md](docs/main-results.md).
+$H$ is the critical 2D KPZ process. The list of formalized statements has 26 entries: Theorem A and Theorem 1.2; the
+paper's other main results (the comparison principle and, for flat initial data, small-scale Gaussianity, the covariance
+kernel, the facts that $H$ is neither a signed measure nor Gaussian, its symmetries, and the Ehrhard property of its
+tested laws); and results, from the paper and from the literature, on which their proofs rest. The four further results
+below complete the list. All 26 are stated, with their exact hypotheses and links to the Lean statements, in
+[docs/main-results.md](docs/main-results.md).
+
+## Four further results
+
+Four additional properties of the critical KPZ process were proved in Lean that were not proved in the paper.
+These are:
+
+- **A — Strict skewness.** For flat initial data, every pairing $X=H_t(0,\psi)$ with $t>0$ and a nonzero nonnegative
+  smooth compactly supported $\psi$ has a finite third absolute moment and $\mathbb E[(X-\mathbb EX)^3]>0$.
+- **B — Response to the initial condition.** For bounded continuous $h,v$ and a smooth compactly supported $\psi$, the
+  response $q\mapsto H_t(h+qv,\psi)-H_t(h,\psi)$ has a version in $C^2(\mathbb R)$, unique up to almost sure equality.
+  Writing $A=\|\psi\|_1$ and $M=\|v\|_\infty$, its value and first two derivatives are bounded by $AM|q|$, $AM$ and
+  $AM^2$, respectively; it is convex when $\psi\ge0$. Smoothing the terminal position over the full interval $[0,t]$
+  gives responses whose first two derivatives converge to these in every finite $L^p$, uniformly on compact $q$
+  intervals.
+- **C — Brownian motion across scales.** For flat initial data, fixed $t>0$, $x\in\mathbb R^2$, $S>0$ and a nonnegative
+  smooth compactly supported $\varphi$ with $\int\varphi=1$, put $\varepsilon_L(s)=\exp(-e^{Ls})$ and
+  $\varphi_\varepsilon^{(x)}(y)=\varepsilon^{-2}\varphi((y-x)/\varepsilon)$. The continuous paths
+  $s\mapsto L^{-1/2}H_t(0,\varphi_{\varepsilon_L(s)}^{(x)})$ converge in law in $C([0,S])$, with its supremum norm, to
+  standard Brownian motion started at zero as real $L\to\infty$.
+- **D — The GFF tangent.** For flat initial data, fixed $t>0$, $x\in\mathbb R^2$ and finitely many real smooth compactly
+  supported tests $f_i$ of integral zero, the vector $(\sqrt{\log(1/\varepsilon)}\,H_t(0,f_{i,\varepsilon}^{(x)}))_i$
+  converges in law to the centred Gaussian with covariance $Q_{ij}=-\iint f_i(u)f_j(v)\log|u-v|\,du\,dv$ as
+  $\varepsilon\downarrow0$. This is the whole-plane GFF on zero-integral tests, with covariance kernel $-\log|u-v|$; the
+  Gaussian may be degenerate.
+
+These are written in a note, [*Four results on the critical 2D KPZ process*](docs/four-results.pdf).
 
 ## Results from other papers
 
@@ -73,11 +98,15 @@ books involved and says, for each, which of its results are formalized and how.
   walk on $\mathbb Z^2$ and the paper's critical scaling at a fixed parameter $\vartheta$. The paper's extension of the
   convergence to deterministic $\vartheta_N\to\vartheta$ is not part of the formalized statements, and universality in
   the environment or the walk is not claimed.
+- **The note.** The further results concern strict skewness, twice differentiable response to bounded continuous initial
+  data, Brownian motion across spatial scales, and a finite-dimensional GFF tangent on zero-integral tests. Each fixes
+  $\vartheta$ and $t>0$; the small-scale limits also fix the spatial point and test functions. They assert no uniformity
+  in these parameters.
 - **Other papers.** Their results are formalized as far as the argument uses them, not in full; the input-paper index
   gives the details.
-- **Modes of convergence.** The convergence statements are those of the paper: in law, in $H^{-a}_{\mathrm{loc}}$, jointly
-  at finitely many times and initial conditions. Convergence as a process in time and almost sure continuity in time are
-  not claimed.
+- **Modes of convergence.** The convergence statements are those of the paper: in law, in $H^{-a}_{\mathrm{loc}}$,
+  jointly at finitely many times and initial conditions. Convergence as a process in physical time and almost sure
+  continuity in physical time are not claimed.
 - **Differences from the printed statements.** Where a Lean statement differs from the printed one, for instance by an
   added hypothesis that the printed statement needs, the difference is recorded in
   [docs/ERRATA-AND-DEVIATIONS.md](docs/ERRATA-AND-DEVIATIONS.md).
@@ -95,10 +124,13 @@ lake build Critical2DKPZ Critical2DKPZStatements
 python3 scripts/print_axioms
 ```
 
-The first command downloads the compiled Mathlib. The second builds the library and the 22 statements. The third runs
-`#print axioms` on each of the 22 theorems and checks that every one depends only on `propext`, `Classical.choice` and
-`Quot.sound`, so that no proof relies on `sorry` or on an added axiom. A successful build alone does not show this,
-since Lean compiles a theorem proved by `sorry` with only a warning.
+The first command downloads the compiled Mathlib. The second builds the library and the 26 statements. Verification
+requires an axiom audit of all 26 theorem declarations: each must depend only on `propext`, `Classical.choice` and
+`Quot.sound`. The supplied axiom runner covers all 26 theorems and rejects any other axiom.
+
+There are two comparator configurations: [`Critical2DKPZAudit/comparator.json`](Critical2DKPZAudit/comparator.json) for
+Theorem 1.2 and [`Critical2DKPZAudit/FourResults/comparator.json`](Critical2DKPZAudit/FourResults/comparator.json) for
+Theorems A–D. The script `scripts/verify_comparator.sh` checks both configurations.
 
 Reading the statements against the paper is the part of the check that a computer cannot do. The
 [paper-to-Lean correspondence](docs/correspondence.md) lists, for each numbered result of the paper, the Lean
@@ -109,11 +141,18 @@ declaration that proves it, the declaration that covers it, or a note that it is
 [`Critical2DKPZAudit/Challenge.lean`](Critical2DKPZAudit/Challenge.lean) restates Theorem 1.2 in a single file that
 imports only Mathlib and defines every object the statement uses: the planar simple random walk and the Gaussian
 environment, the critical tuning $\beta_N$, the point-to-point and point-to-plane partition functions, the critical SHF,
-the critical KPZ process and its regularized and lattice approximations, and the local negative Sobolev energies.
-Its only `sorry` is the proof of the theorem.
-[`Critical2DKPZAudit/Solution.lean`](Critical2DKPZAudit/Solution.lean) proves the same statement from this library,
-and [comparator](https://github.com/leanprover/comparator) checks, with both the Lean kernel and the NanoDa kernel,
-that the two statements and all 40 definitions agree and that the proof uses only the standard axioms:
+the critical KPZ process and its regularized and lattice approximations, and the local negative Sobolev energies. Its
+only `sorry` is the proof of the theorem. [`Critical2DKPZAudit/Solution.lean`](Critical2DKPZAudit/Solution.lean) proves
+the same statement from this library, and [comparator](https://github.com/leanprover/comparator) checks, with both the
+Lean kernel and the NanoDa kernel, that the two statements and all 40 definitions agree and that the proof uses only the
+standard axioms.
+
+[`Critical2DKPZAudit/FourResults/Challenge.lean`](Critical2DKPZAudit/FourResults/Challenge.lean) restates Theorems A–D
+of the note using only Mathlib. It contains 50 definitions: the original 40, `TestFn.dilate` and the nine extension
+definitions. Its four theorem proofs are the only intentional uses of `sorry`.
+[`Critical2DKPZAudit/FourResults/Solution.lean`](Critical2DKPZAudit/FourResults/Solution.lean) proves the same four
+statements from this library. The comparator checks their statements, all 50 definitions and standard-axiom
+dependencies. The following commands build and audit both configurations:
 
 ```sh
 lake build Critical2DKPZAudit
@@ -124,7 +163,7 @@ scripts/verify_comparator.sh
 The comparator script runs on Linux. It needs `landrun` and `nanoda_bin` on `PATH`, or located through
 `COMPARATOR_LANDRUN` and `COMPARATOR_NANODA`; it builds pinned, toolchain-compatible copies of `comparator` and
 `lean4export` itself, unless existing ones are supplied through `COMPARATOR_BIN` and `COMPARATOR_LEAN4EXPORT`. When
-reading the Challenge, keep in mind:
+reading the Theorem 1.2 Challenge, keep in mind:
 
 - The hypothesis of the theorem is that $Z$ is a critical SHF in the sense of the Challenge. This class is not empty:
   the library proves Theorem A, the existence of such an SHF for every $\vartheta$, but that theorem is not part of the
@@ -155,9 +194,10 @@ places where the Lean statements differ from the printed ones, are listed per so
 
 ## Documentation
 
-- [The 22 results](docs/main-results.md): each result proved here, with its hypotheses and a link to its Lean statement.
-- [Paper-to-Lean correspondence](docs/correspondence.md): every numbered result of the paper and its Lean counterpart,
-  or a note that it is not formalized separately.
+- [The 26 statements](docs/main-results.md): each statement, with its hypotheses and a link to its Lean statement.
+- [Paper-to-Lean correspondence](docs/correspondence.md): every numbered result of the paper and the note, with its Lean
+  counterpart, or a note that it is not formalized separately.
+- [Four further results](docs/four-results.pdf): Scott Armstrong’s note containing Theorems A–D.
 - [Input papers](docs/inputs/README.md): which results of other papers are formalized, and how.
 - [Errata and deviations](docs/ERRATA-AND-DEVIATIONS.md): errors found in the papers, and differences between the
   printed and the formalized statements.
@@ -177,5 +217,6 @@ Institute School of Mathematics, Computing, and Data Science, New York Universit
 European Research Council (ERC) under the European Union's Horizon Europe research and innovation programme, grant
 agreement No. 101200828.
 
-To cite this formalization, use [CITATION.cff](CITATION.cff), together with the paper it formalizes. The Lean code is
+To cite this formalization, use [CITATION.cff](CITATION.cff), together with the paper and Scott Armstrong, *Four results
+on the critical 2D KPZ process*, 2026, included as [docs/four-results.pdf](docs/four-results.pdf). The Lean code is
 licensed under the Apache License 2.0; see [LICENSE](LICENSE).

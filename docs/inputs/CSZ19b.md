@@ -15,6 +15,10 @@ Lean proves the KPZ adaptation of CSZ19b's finite chaos decomposition: the first
 
 The finite chaos identity is adapted to the KPZ conventions rather than formalized verbatim as Equations (3.2)–(3.3). The source’s general-disorder continuum variance and third-moment limit theorems and its mollified-SHE results are not formalized here.
 
+## Uses in the four further results
+
+The finite first-collision identity is also used to prove the continuum covariance formula [`Critical2DKPZ.Extensions.GffTangent.covariance_shfPairing_start`](../../Critical2DKPZ/Extensions/GffTangent/LinearCovariance.lean), which underlies the linear CLT and the logarithmic locality estimates in the note. This is an application of the adapted decomposition above, with the Euler-shifted renewal normalization; the report still counts one adapted group.
+
 ## Source version
 
 [Source version](https://arxiv.org/abs/1808.03586v2). PDF SHA-256: `6f7621782df63ac27613f3165dceb3c3e3813e5fc3b9f7ad4e42b4fdd9efe589`.

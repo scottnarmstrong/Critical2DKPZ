@@ -53,7 +53,7 @@ jobs:
           use-mathlib-cache: true
       - name: Check public top-level names against dependencies
         run: python3 scripts/release/check_toplevel_names.py --root .
-      - name: Check Lean modules and comparator configuration
+      - name: Check Lean modules and both comparator configurations
         run: python3 scripts/verify_modules.py --root .
       - name: Validate formalization metadata and published theorem lists
         run: |
@@ -100,10 +100,10 @@ jobs:
           git -C "$HOME/tools/nanoda_lib" checkout --detach "$NANODA_REV"
           cd "$HOME/tools/nanoda_lib"
           cargo build --release --locked
-      - name: Build the audit library
+      - name: Build both comparator solutions and the axiom audit
         run: |
           set -Eeuo pipefail
-          lake build Critical2DKPZAudit
+          lake build Critical2DKPZAudit.Solution Critical2DKPZAudit.FourResults.Solution Critical2DKPZAudit.AxiomsAudit
           # Lake's per-module setup files (about 5 MB each) are not needed once the build is done.
           find .lake/build/ir -name '*.setup.json' -delete
           df -h .
@@ -117,7 +117,7 @@ jobs:
             sudo swapon /mnt/comparator.swap
           fi
           free -h
-      - name: Run comparator with NanoDa
+      - name: Run both comparator configurations with NanoDa
         run: |
           set -Eeuo pipefail
           export KPZ_COMPARATOR_CACHE="$HOME/tools/critical2dkpz-comparator"

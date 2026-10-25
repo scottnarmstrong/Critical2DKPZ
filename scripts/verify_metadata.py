@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate release metadata and agreement of the 22 published theorem lists.
+"""Validate release metadata and agreement of the 26 published theorem lists.
 
 Install PyYAML and jsonschema, then run from the checkout root:
     python3 scripts/verify_metadata.py --root .
@@ -27,7 +27,7 @@ SCHEMA_REVISION = "99c678e569c7c4c0772db297c5ddd5e4c9b6322e"
 SCHEMA_BASE = ("https://raw.githubusercontent.com/mathlib-initiative/"
                f"formalization.yaml/{SCHEMA_REVISION}/schema/")
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
-THEOREM_COUNT = 22
+THEOREM_COUNT = 26
 
 
 def require(condition, message):
@@ -70,7 +70,7 @@ def unique(values, label):
 def published_theorems(root, metadata):
     text = (root / "docs/main-results.md").read_text()
     files = re.findall(
-        r"(?m)^\d+\. .*?\]\(\.\./(Critical2DKPZStatements/[A-Za-z0-9_]+\.lean)\)", text)
+        r"(?m)^\d+\. .*?\]\(\.\./(Critical2DKPZStatements/(?:[A-Za-z0-9_]+/)*[A-Za-z0-9_]+\.lean)\)", text)
     unique(files, "docs/main-results.md")
     expected = []
     modules = []

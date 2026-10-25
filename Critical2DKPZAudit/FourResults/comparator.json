@@ -1,0 +1,16 @@
+{
+  "challenge_module": "Critical2DKPZAudit.FourResults.Challenge",
+  "solution_module": "Critical2DKPZAudit.FourResults.Solution",
+  "theorem_names": [
+    "Critical2DKPZAudit.FourResults.Extensions.criticalKPZ_centralMoment_three_pos",
+    "Critical2DKPZAudit.FourResults.Extensions.initialResponse_existsUnique",
+    "Critical2DKPZAudit.FourResults.Extensions.existsUnique_wienerLaw_and_kpz_scale_tendstoInDistribution",
+    "Critical2DKPZAudit.FourResults.Extensions.existsUnique_finiteGffLaw_and_kpz_microscopic_tendstoInDistribution"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "enable_nanoda": true
+}

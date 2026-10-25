@@ -21,8 +21,11 @@ project:
     (Proposition 1.5), is not Gaussian (Theorem 1.6), is invariant under
     translations and rotations and covariant under scaling (Proposition 1.8),
     and its pairing with each nonnegative test function has a law of Ehrhard
-    type (Proposition 3.8). The parameter theta is fixed. Built on Mathlib,
-    using only Lean's standard axioms.
+    type (Proposition 3.8). It also proves strict skewness, twice differentiable
+    response to initial data, Brownian motion across scales and the
+    finite-dimensional GFF tangent (Theorems A–D of Scott Armstrong’s note).
+    The parameter theta is fixed. Built on Mathlib.
+    All proofs use only Lean's standard axioms.
   authors:
     - "Scott Armstrong"
   responsible_maintainers:
@@ -60,6 +63,18 @@ sources:
       Propositions 4.1, 4.4-4.5). Numbering refers to arXiv version 1 (22 October 2026). Errata
       and deviations are listed in docs/ERRATA-AND-DEVIATIONS.md.
     author_endorsement: "not-contacted"
+  - title: "Four results on the critical 2D KPZ process"
+    authors:
+      - "Scott Armstrong"
+    year: 2026
+    type: "paper"
+    location: "docs/four-results.pdf"
+    relationship: "formalizes"
+    note: >-
+      Theorems A–D: strict skewness, response to the initial condition,
+      Brownian motion across scales and the finite-dimensional GFF tangent.
+      All are proved at fixed parameters.
+    author_endorsement: "participated"
   - title: "The Parisi formula has a unique minimizer"
     authors:
       - "Antonio Auffinger"
@@ -107,7 +122,7 @@ sources:
     type: "paper"
     location: "Annals of Applied Probability 35 (2025), no. 4, 2604–2643; arXiv:2307.02453v3"
     relationship: "adapts"
-    note: "CCR25: Fourth- and sixth-moment bounds for the planar Gaussian polymer with terminal test function 1, using the collision-word expansion; the algebraic bound with a finite configuration cutoff, at arbitrary particle order, remains conditional on its stated partition-moment and operator bounds."
+    note: "CCR25: Fixed-horizon quasi-critical Gaussian planar linear CLT and fourth- and sixth-moment bounds for the planar Gaussian polymer with terminal test function 1, using the collision-word expansion; the algebraic bound with a finite configuration cutoff, at arbitrary particle order, remains conditional on its stated partition-moment and operator bounds."
     author_endorsement: "not-contacted"
   - title: "On the central limit theorem for the log-partition function of 2D directed polymers"
     authors:
@@ -260,7 +275,7 @@ sources:
     type: "paper"
     location: "preprint (2026), arXiv:2603.03246v1"
     relationship: "adapts"
-    note: "GT26: For each process satisfying the stated critical SHF definition, the proved result is the mean-centered, fixed-parameter, delayed heat-start log-log central limit theorem, obtained by a lattice argument; finite block expansions are proved. No moving-parameter/original-centering or conditional-GMC theorem."
+    note: "GT26: Analytic collision-density estimates used by the note are proved. For each process satisfying the stated critical SHF definition, the proved result is the mean-centered, fixed-parameter, delayed heat-start log-log central limit theorem, obtained by a lattice argument; finite block expansions are proved. No moving-parameter/original-centering or conditional-GMC theorem."
     author_endorsement: "not-contacted"
   - title: "A boundary value problem and the Ehrhard inequality"
     authors:
@@ -388,18 +403,21 @@ related_formalizations: []
 
 status:
   scope: >-
-    Formalized and proved: the 22 statements listed in docs/main-results.md, namely the
+    Formalized and proved: the 26 statements listed in docs/main-results.md, namely the
     ten main results of the paper (Theorem A, Theorem 1.2, the comparison
     principle, Theorem 1.4(i) and (ii), Proposition 1.5, Theorem 1.6,
-    Proposition 1.8, Proposition 3.8 and the centring asymptotic (1.16)), and
+    Proposition 1.8, Proposition 3.8 and the centring asymptotic (1.16));
     twelve key intermediate results, among them Ehrhard's inequality, Gaussian
     convexity (Theorem 3.1), the local limit theorem for the planar simple
     random walk, the critical-window second moment, the block moment bounds
     (Lemma B.2), the log-normality of small-scale SHF averages (Theorem 8.1),
     the symmetries, time reversal and continuity of the SHF, and the joint
-    convergence of the regularized fields (Theorem 5.1). All statements concern
-    the paper's model: Gaussian disorder, the planar simple random walk and the
-    paper's critical tuning; no universality over the disorder is claimed.
+    convergence of the regularized fields (Theorem 5.1); and Theorems A–D of
+    Scott Armstrong's note: strict skewness, response to the initial condition,
+    Brownian motion across scales and the finite-dimensional GFF tangent.
+    All statements concern the paper's model: Gaussian disorder, the planar
+    simple random walk and the paper's critical tuning; no universality over
+    the disorder is claimed.
     Results of other papers are formalized in the form the proofs use, as
     special cases or adaptations listed in docs/inputs/.
   sorry_count: 0
@@ -527,10 +545,27 @@ alignment:
       module: "Critical2DKPZStatements.ThmToyJoint"
       status: "proved"
 
+    - source: "Four results on the critical 2D KPZ process, Theorem A"
+      lean: "Critical2DKPZ.Extensions.criticalKPZ_centralMoment_three_pos"
+      module: "Critical2DKPZStatements.Extensions.CriticalKPZCentralMomentThreePos"
+      status: "proved"
+    - source: "Four results on the critical 2D KPZ process, Theorem B"
+      lean: "Critical2DKPZ.Extensions.initialResponse_existsUnique"
+      module: "Critical2DKPZStatements.Extensions.InitialResponseExistsUnique"
+      status: "proved"
+    - source: "Four results on the critical 2D KPZ process, Theorem C"
+      lean: "Critical2DKPZ.Extensions.existsUnique_wienerLaw_and_kpz_scale_tendstoInDistribution"
+      module: "Critical2DKPZStatements.Extensions.ExistsUniqueWienerLawKPZScale"
+      status: "proved"
+    - source: "Four results on the critical 2D KPZ process, Theorem D"
+      lean: "Critical2DKPZ.Extensions.existsUnique_finiteGffLaw_and_kpz_microscopic_tendstoInDistribution"
+      module: "Critical2DKPZStatements.Extensions.ExistsUniqueFiniteGffLawKPZMicroscopic"
+      status: "proved"
+
 acknowledgements: >-
   Built on Lean 4, Mathlib, Lake, leanprover/comparator and NanoDa. The statement of each result follows the
   paper of Berger, Caravenna, Clark, Dunlap, Gu, Liu, Nakajima, Sun, Tsai, Xie
-  and Zygouras and the papers it cites.
+  and Zygouras, Scott Armstrong’s note, and the papers they cite.
   Scott Armstrong was supported by the European Research Council (ERC) under
   the European Union's Horizon Europe research and innovation programme,
   grant agreement No. 101200828.

@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: >-
   If you use this formalization, please cite it as below, together with the
-  paper it formalizes. Scott Armstrong was supported by the European Research
+  paper and note it formalizes. Scott Armstrong was supported by the European Research
   Council (ERC) under the European Union's Horizon Europe research and
   innovation programme, grant agreement No. 101200828.
 title: "The Critical 2D KPZ Process: a Lean formalization"
@@ -44,3 +44,10 @@ references:
         given-names: Zuodi
       - family-names: Zygouras
         given-names: Nikos
+  - type: manuscript
+    title: "Four results on the critical 2D KPZ process"
+    year: 2026
+    notes: "Included as docs/four-results.pdf."
+    authors:
+      - family-names: Armstrong
+        given-names: Scott

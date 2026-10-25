@@ -15,6 +15,10 @@ The table distinguishes specializations and adaptations from the full source sta
 Gaussian-disorder planar fourth- and sixth-moment specializations of the CSZ25 moment-bound argument are implemented, with geometric-block moment bounds; the full all-orders theorem and the source singularity proof are not formalized here.
 
 
+## Uses in the four further results
+
+The note’s scale-block estimates reuse the fourth-moment bounds through [`Critical2DKPZ.Extensions.ScaleLimit.block_moments`](../../Critical2DKPZ/Extensions/ScaleLimit/BlockMoments.lean). Its tangent argument also uses positive sixth moments in estimates for ratios of entrance masses. The inverse-sixth-moment bound [`Critical2DKPZ.Extensions.GffTangent.heatStartMass_inverse_sixth_moment`](../../Critical2DKPZ/Extensions/GffTangent/LogMoments.lean) is derived instead from Gaussian convexity and the second moment, and [`Critical2DKPZ.Extensions.GffTangent.integral_inv_ratio_pow_three_le`](../../Critical2DKPZ/Extensions/GffTangent/LogMoments.lean) combines positive and inverse sixth moments by Cauchy–Schwarz. These applications do not establish the full general-order negative-moment claim cited from Theorem 1.11 in the note. The two report groups above are unchanged.
+
 ## Source version
 
 [Source version](https://arxiv.org/abs/2504.06128v2). PDF SHA-256: `d0559f6671ce9b74d7d5cde94b2378c791d2a9ce54acd80531e2b03fecb2fb57`.

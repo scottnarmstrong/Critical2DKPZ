@@ -28,7 +28,12 @@ public import Critical2DKPZStatements.ShfSymmetries
 public import Critical2DKPZStatements.SrwLocalCLTGaussianBound
 public import Critical2DKPZStatements.ThmToyJoint
 
-/-! # Axiom dependencies of the 22 published theorem exports -/
+public import Critical2DKPZStatements.Extensions.CriticalKPZCentralMomentThreePos
+public import Critical2DKPZStatements.Extensions.InitialResponseExistsUnique
+public import Critical2DKPZStatements.Extensions.ExistsUniqueWienerLawKPZScale
+public import Critical2DKPZStatements.Extensions.ExistsUniqueFiniteGffLawKPZMicroscopic
+
+/-! # Axiom dependencies of the 26 published theorem exports -/
 
 @[expose] public section
 
@@ -54,5 +59,10 @@ public import Critical2DKPZStatements.ThmToyJoint
 #print axioms Critical2DKPZ.prop_PF_logTails
 #print axioms Critical2DKPZ.lem_extension_approximation
 #print axioms Critical2DKPZ.thm_toy_joint
+
+#print axioms Critical2DKPZ.Extensions.criticalKPZ_centralMoment_three_pos
+#print axioms Critical2DKPZ.Extensions.initialResponse_existsUnique
+#print axioms Critical2DKPZ.Extensions.existsUnique_wienerLaw_and_kpz_scale_tendstoInDistribution
+#print axioms Critical2DKPZ.Extensions.existsUnique_finiteGffLaw_and_kpz_microscopic_tendstoInDistribution
 
 end

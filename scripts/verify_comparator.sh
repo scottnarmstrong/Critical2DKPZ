@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Run leanprover/comparator on Critical2DKPZAudit/comparator.json, including NanoDa.
+# Run leanprover/comparator on both Critical2DKPZAudit configurations, including NanoDa.
 # Verification script, released under Apache-2.0.
 # Usage: scripts/verify_comparator.sh
 #
@@ -16,13 +16,18 @@ if [ "$#" -ne 0 ]; then
   exit 2
 fi
 root=$(cd "$(dirname "$0")/.." && pwd)
-config=Critical2DKPZAudit/comparator.json
+configs=(
+  Critical2DKPZAudit/comparator.json
+  Critical2DKPZAudit/FourResults/comparator.json
+)
 cache=${KPZ_COMPARATOR_CACHE:-"$HOME/.cache/critical2dkpz-comparator"}
 comparator_commit=32bd61da1d68fbaa310234964e9b820b03a0f82f
 lean4export_commit=6cea97789dc088ea47fcea15692db85685aedac5
 
 cd "$root"
-[ -f "$config" ] || { echo "error: $config not found" >&2; exit 1; }
+for config in "${configs[@]}"; do
+  [ -f "$config" ] || { echo "error: $config not found" >&2; exit 1; }
+done
 landrun=${COMPARATOR_LANDRUN:-$(command -v landrun || true)}
 nanoda=${COMPARATOR_NANODA:-$(command -v nanoda_bin || true)}
 [ -n "$landrun" ] && [ -x "$landrun" ] || {
@@ -33,10 +38,13 @@ nanoda=${COMPARATOR_NANODA:-$(command -v nanoda_bin || true)}
 }
 python3 -I -c '
 import json,sys
-c=json.load(open(sys.argv[1]))
-if c.get("enable_nanoda") is not True:
-    sys.exit("error: comparator.json must set enable_nanoda to true")
-' "$config"
+for path in sys.argv[1:]:
+    c=json.load(open(path))
+    if c.get("enable_nanoda") is not True:
+        sys.exit(f"error: {path} must set enable_nanoda to true")
+    if not all(isinstance(c.get(k), str) and c[k] for k in ("challenge_module", "solution_module")):
+        sys.exit(f"error: {path} must name both modules")
+' "${configs[@]}"
 
 # Use pinned builds: globally installed exporters may use another .olean format.
 # Explicit overrides may point to existing toolchain-compatible binaries.
@@ -74,29 +82,29 @@ for tool in "$comparator" "$lean4export" "$landrun" "$nanoda"; do
 done
 
 cd "$root"
-[ -f "$config" ] || { echo "error: $config not found" >&2; exit 1; }
-
-mapfile -t modules < <(python3 -I -c \
-  'import json,sys; c=json.load(open(sys.argv[1])); print(c["challenge_module"]); print(c["solution_module"])' \
-  "$config")
-[ ${#modules[@]} -eq 2 ] || { echo "error: invalid comparator config" >&2; exit 1; }
 # Discard only this audit library's artifacts so both environments are freshly built.
+# Do this once: the second configuration reuses the first one's shared definitions.
 rm -rf "$root/.lake/build/lib/lean/Critical2DKPZAudit" "$root/.lake/build/ir/Critical2DKPZAudit"
 rm -f "$root"/.lake/build/lib/lean/Critical2DKPZAudit.* "$root"/.lake/build/ir/Critical2DKPZAudit.*
-echo "=== comparator: Critical2DKPZAudit"
-# Prebuild with bounded parallelism (this also builds the library if it is not yet built);
-# comparator's sandboxed builds then find warm artifacts.
-prebuild=(lake build "${modules[@]}")
-if [ -n "${COMPARATOR_BUILD_LOCK:-}" ]; then
-  prebuild=(flock "$COMPARATOR_BUILD_LOCK" "${prebuild[@]}")
-fi
-LEAN_NUM_THREADS=${LEAN_NUM_THREADS:-2} nice -n 10 "${prebuild[@]}" < /dev/null || {
-  echo "=== Critical2DKPZAudit: FAIL (build)"; exit 1;
-}
-if COMPARATOR_LEAN4EXPORT="$lean4export" COMPARATOR_NANODA="$nanoda" \
-  COMPARATOR_LANDRUN="$landrun" LEAN_NUM_THREADS=${LEAN_NUM_THREADS:-2} \
-  nice -n 10 lake env "$comparator" "$config"; then
-  echo "=== Critical2DKPZAudit: PASS"
-else
-  echo "=== Critical2DKPZAudit: FAIL"; exit 1
-fi
+for config in "${configs[@]}"; do
+  mapfile -t modules < <(python3 -I -c \
+    'import json,sys; c=json.load(open(sys.argv[1])); print(c["challenge_module"]); print(c["solution_module"])' \
+    "$config")
+  [ ${#modules[@]} -eq 2 ] || { echo "error: invalid comparator config: $config" >&2; exit 1; }
+  echo "=== comparator: $config"
+  # Prebuild with bounded parallelism; sandboxed builds then find warm artifacts.
+  prebuild=(lake build "${modules[@]}")
+  if [ -n "${COMPARATOR_BUILD_LOCK:-}" ]; then
+    prebuild=(flock "$COMPARATOR_BUILD_LOCK" "${prebuild[@]}")
+  fi
+  LEAN_NUM_THREADS=${LEAN_NUM_THREADS:-2} nice -n 10 "${prebuild[@]}" < /dev/null || {
+    echo "=== $config: FAIL (build)"; exit 1;
+  }
+  if COMPARATOR_LEAN4EXPORT="$lean4export" COMPARATOR_NANODA="$nanoda" \
+    COMPARATOR_LANDRUN="$landrun" LEAN_NUM_THREADS=${LEAN_NUM_THREADS:-2} \
+    nice -n 10 lake env "$comparator" "$config"; then
+    echo "=== $config: PASS"
+  else
+    echo "=== $config: FAIL"; exit 1
+  fi
+done

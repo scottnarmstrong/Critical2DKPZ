@@ -16,6 +16,10 @@ The table distinguishes specializations and adaptations from the full source sta
 
 Lean proves scalar and parity-correct planar spatial renewal limits for the KPZ collision law, the leading scalar-density singularity and logarithmic bounds, and Gaussian planar free-polymer second moments. The abstract renewal theorems, the full second-order expansion and the stochastic Dickman-subordinator construction are outside this scope. The Gamma-integral kernel is not identified with the truncated Dickman extension past time 1.
 
+## Uses in the four further results
+
+The note’s linear fluctuation and locality arguments reuse the scalar renewal asymptotics in the integrated collision density. The fixed-horizon linear covariance is identified in [`Critical2DKPZ.Extensions.GffTangent.covariance_fixed_horizon_limit`](../../Critical2DKPZ/Extensions/GffTangent/FixedHorizonCovariance.lean). The planar simple-walk and terminal-disorder conventions remain those above; no additional general renewal-process result is asserted. The four adapted groups are unchanged.
+
 ## Source version
 
 [Source version](https://arxiv.org/abs/1805.01465v4). PDF SHA-256: `94ebfb0eb15e42b987d9502ef5e486669023c8a74889f0f87172bf3484d10629`.

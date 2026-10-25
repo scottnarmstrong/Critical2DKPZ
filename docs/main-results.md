@@ -1,10 +1,10 @@
-# The 22 results proved in this formalization
+# The 26 statements of this formalization
 
-This page lists the 22 Lean statements proved in this repository for *The Critical 2D KPZ Process* (Berger,
-Caravenna, Clark, Dunlap, Gu, Liu, Nakajima, Sun, Tsai, Xie and Zygouras): the main conclusions about the critical SHF
+This page lists the 26 Lean statements in this repository: 22 for *The Critical 2D KPZ Process* (Berger,
+Caravenna, Clark, Dunlap, Gu, Liu, Nakajima, Sun, Tsai, Xie and Zygouras), comprising the main conclusions about the critical SHF
 and the critical KPZ process (items 1 to 10), followed by selected supporting results from the paper and from the
-literature (items 11 to 22). Each link opens the file with the exact Lean statement; the definitions it uses are in
-[`Critical2DKPZ/Definitions`](../Critical2DKPZ/Definitions/). Theorem and page numbers refer to
+literature (items 11 to 22), and four further results from Scott Armstrong’s [*Four results on the critical 2D KPZ process*](four-results.pdf) (items 23 to 26). All 26 statements are proved. Each link opens the file with the exact Lean statement; the definitions it uses are in
+[`Critical2DKPZ/Definitions`](../Critical2DKPZ/Definitions/). For items 1–22, theorem and page numbers refer to
 [arXiv:2610.31614v1](https://arxiv.org/abs/2610.31614v1).
 
 ## Conventions
@@ -25,6 +25,20 @@ Uniformity over compact parameter intervals is stated where proved; no general-d
 **The associated KPZ process.** We call a family $H$ associated with $Z$ when, for $t>0$, bounded continuous $h_0$ and test functions $\varphi\in C_c^\infty(\mathbb R^2)$, the regularized pairings converge in probability to $H_t^\vartheta(h_0,\varphi)$ as $\delta\downarrow0$ ([`IsCriticalKPZ`](../Critical2DKPZ/Definitions/IsCriticalKPZ.lean)); $H$ is determined only up to null sets. Write $H_t^\vartheta(\varphi)$ when $h_0=0$. Statements 3 to 9 and 22 hold for every critical SHF $Z$ with parameter $\vartheta$ and every family $H$ associated with $Z$. Null sets and measurability qualifications are part of the statements; the comparison inequality holds almost surely.
 
 **Notation.** $Z_{s,t}(f,g)=\int f(x)g(y)\,Z_{s,t}(dx,dy)$, $g_u(z)=(2\pi u)^{-1}e^{-\lvert z\rvert^2/(2u)}$, $g_\delta^{(x)}=g_\delta(\cdot-x)$, and $q_n(z)$ is the probability that the simple random walk is at $z$ after $n$ steps.
+
+**The note.** Items 23–26 fix $\vartheta\in\mathbb R$ and $t>0$ and use any critical SHF $Z$ and associated $H$; there is no parameter-uniform assertion. Write $f_\varepsilon^{(x)}(y)=\varepsilon^{-2}f((y-x)/\varepsilon)$. The scale path is $X_L(s)=L^{-1/2}H_t^\vartheta(\varphi_{\exp(-e^{Ls})}^{(x)})$ on $[0,S]$, with the uniform topology on continuous paths. Its Wiener law is characterized by centred Gaussian finite-dimensional laws with covariance $\min(s,s')$. The finite GFF law is the centred Gaussian on $\mathbb R^n$ with covariance
+
+$$
+Q(f,g)=-\int_{\mathbb R^2}\int_{\mathbb R^2} f(u)g(v)\log|u-v|\,dv\,du.
+$$
+
+For zero-integral tests this form is positive semidefinite; singular Gaussian laws are included. The cutoff response used in item 24 is
+
+$$
+R_r(q)=\int\psi(x)\bigl[\log Z_{0,t}(e^{h+qv},g_r^{(x)})-\log Z_{0,t}(e^h,g_r^{(x)})\bigr]\,dx,\qquad r>0.
+$$
+
+It retains the full interval $[0,t]$ and smooths only the terminal position. The response is represented in Lean by an almost-sure equivalence class of continuous jets $(R,R',R'')$, with the derivative relations asserted almost surely. Compact jet norms are $\sup_{q\in[a,b]}\max_{0\le j\le2}|R^{(j)}(q)|$.
 
 ## The results
 
@@ -58,7 +72,7 @@ Uniformity over compact parameter intervals is stated where proved; no general-d
 
 15. **[Critical-window second moments](../Critical2DKPZStatements/SecondMomentCriticalWindow.lean)** — For fixed $\vartheta$ and $t>0$, the flat point-to-plane partition function satisfies $\mathbb E Z_{[Nt]}(0)^2/\log N\to C_{\vartheta,t}>0$, and eventually $\sigma_N^2\mathbb E Z_k(0)^2\le C_\vartheta/\log(1+N/k)$ simultaneously for $1\le k\le N$. (Caravenna, Sun and Zygouras, *The Dickman subordinator, renewal theorems, and disordered systems*, Proposition A.2; the paper, §4.1.)
 
-16. **[Geometric-block moments](../Critical2DKPZStatements/BlockMoments.lean)** — Let $K=\lfloor\log_\rho N\rfloor+1$, $N_0=0$, $N_i=[N\rho^{i-K}]$ for $1\le i\lt K$, $N_K=N$, and let $\widehat Z_i=\sum_y q_{N_{i-1}}(y)\,Z_{N_{i-1},N_i}(y)$ be the point-to-plane partition function on $[N_{i-1},N_i]$ averaged over the position at time $N_{i-1}$ of a walk started at $0$. For the normalized geometric-block partition functions $\widehat Z_i$ and $1\le i\le K$, including the first block of bounded length, $\mathrm{Var}(\widehat Z_i)\le C/(K+1-i)$ and $\mathbb E|\widehat Z_i-1|^4\le C/(K+1-i)^2$, with $C$ uniform for $\rho$ in a fixed compact subset of $(1,\infty)$ and $\vartheta$ in a fixed compact interval, although the eventual threshold in $N$ may depend on $\rho$. (Lemma B.2, p. 80, and Remark 7.5, p. 40.)
+16. **[Geometric-block moments](../Critical2DKPZStatements/BlockMoments.lean)** — Let $K=\lfloor\log_\rho N\rfloor+1$, $N_0=0$, $N_i=[N\rho^{i-K}]$ for $1\le i\lt K$, $N_K=N$, and let $\widehat Z_i=\sum_y q_{N_{i-1}}(y)\,Z_{N_{i-1},N_i}(y)$ be the point-to-plane partition function on $[N_{i-1},N_i]$ averaged over the position at time $N_{i-1}$ of a walk started at $0$. For the mean-one geometric-block partition functions $\widehat Z_i$ and $1\le i\le K$, including the first block of bounded length, $\mathrm{Var}(\widehat Z_i)\le C/(K+1-i)$ and $\mathbb E|\widehat Z_i-1|^4\le C/(K+1-i)^2$, with $C$ uniform for $\rho$ in a fixed compact subset of $(1,\infty)$ and $\vartheta$ in a fixed compact interval, although the eventual threshold in $N$ may depend on $\rho$. (Lemma B.2, p. 80, and Remark 7.5, p. 40.)
 
 17. **[SHF transformations and regularity](../Critical2DKPZStatements/ShfSymmetries.lean)** — Every critical SHF is again a critical SHF (with the same parameter $\vartheta$) under simultaneous spatial translations of both endpoints, determinant-one rotations and nonnegative time shifts. Under the diffusive rescaling $Z'_{s,t}=a^{-1}(D_{a^{-1/2}}\times D_{a^{-1/2}})_*Z_{as,at}$ for $a>0$, it is a critical SHF with parameter $\vartheta+\log a$, where $D_c(y)=cy$ and $(\cdot)_*$ is the image measure. For every finite family $0\le s_i\lt t_i\le T$ it has the finite-dimensional time-reversal law for compact continuous endpoint-pair tests obtained by replacing $[s_i,t_i]$ by $[T-t_i,T-s_i]$ and exchanging endpoints, and each compact continuous test pairing is continuous in probability as $(s,t)$ varies within $0\le s\lt t$. For each fixed $0\le s\lt t$, $\delta>0$, $x\in\mathbb R^2$ and bounded continuous $h_0$, the pairing $Z_{s,t}(g_\delta^{(x)},e^{h_0})$ is positive almost surely, its logarithm is almost-everywhere measurable, and that logarithm has an Ehrhard-type law. (SHF transformations, §1 and §5; continuity in probability, §6.2.)
 
@@ -71,3 +85,11 @@ Uniformity over compact parameter intervals is stated where proved; no general-d
 21. **[Lattice smoothing for general initial data](../Critical2DKPZStatements/LemExtensionApproximation.lean)** — For fixed bounded continuous $h_0$ and smooth compactly supported $\varphi$, the $L^2$ norm of the difference between the tested reversed lattice field and its regularization has $\limsup_{N\to\infty}$ at most $C|\log\delta|^{-1/40}$ for small $\delta>0$, with $C$ and the small-$\delta$ cutoff uniform on fixed compact ranges of $T-t>0$ and $\vartheta$; the constant may depend on $h_0$ itself, not only on its supremum norm. (Lemma 5.3, p. 30.)
 
 22. **[Joint finite-dimensional convergence](../Critical2DKPZStatements/ThmToyJoint.lean)** — At each fixed terminal time $T>0$ there are SHF-measurable limits $X(t,h_0,\varphi)$ of the reversed regularized pairings. For each fixed $h_0$, $\varphi$ and $a\in (0,T]$, the constants $C$ and the sufficiently small $\delta$ cutoff may depend on $\vartheta,T,h_0,\varphi,a$, but are uniform for $0\le t\le T-a$. The limits have $L^2$ error at most $C|\log(\delta/(T-t))|^{-1/40}$ uniformly for $0\le t\le T-a$ with $0\lt a\le T$, convergence in every finite $L^p$, $p\ge1$, joint lattice convergence in law for finitely many triples $(t,h_0,\varphi)$ with $0\le t\lt T$, and joint laws equal to those of $(H_{T-t_i}^\vartheta(h_{0,i},\varphi_i))_i$ for every KPZ process $H$ associated with the SHF. (Theorem 5.1, p. 28, and Remark 6.5, p. 36.)
+
+23. **[Strict skewness](../Critical2DKPZStatements/Extensions/CriticalKPZCentralMomentThreePos.lean)** — For every nonzero nonnegative smooth compactly supported $\psi$, the flat-initial pairing $X=H_t^\vartheta(\psi)$ is almost-everywhere measurable, has $\mathbb E|X|^3\lt\infty$, and satisfies $\mathbb E[(X-\mathbb EX)^3]>0$. (Note, Theorem A, p. 2.)
+
+24. **[Response to the initial condition](../Critical2DKPZStatements/Extensions/InitialResponseExistsUnique.lean)** — For bounded continuous $h,v$ and any smooth compactly supported $\psi$, there is a unique almost-sure class of continuous jets $(R,R',R'')$ defining a $C^2(\mathbb R)$ response. For each fixed $q$, $R(q)=H_t^\vartheta(h+qv,\psi)-H_t^\vartheta(h,\psi)$ almost surely. On one full-measure event, for every $q$, with $A=\|\psi\|_1$ and $M=\|v\|_\infty$, one has $|R(q)|\le AM|q|$, $|R'(q)|\le AM$, $|R''(q)|\le AM^2$, and $R''(q)\ge0$ when $\psi\ge0$. For every $r>0$, $R_r$ is almost surely $C^3$. For every $a\le b$ and $1\le p\lt\infty$, the compact jets of $R_r$ and $R$ lie in $L^p$, and the $L^p$ norm of their difference tends to zero as real $r\downarrow0$. (Note, Theorem B, pp. 2–3.)
+
+25. **[Brownian motion across scales](../Critical2DKPZStatements/Extensions/ExistsUniqueWienerLawKPZScale.lean)** — For every fixed $x\in\mathbb R^2$, nonnegative smooth compactly supported $\varphi$ with $\int\varphi=1$ and $S>0$, there is a unique probability law on $C([0,S])$ with standard Brownian finite-dimensional distributions. For every real $L>0$ and every outcome, $X_L$ is a continuous path given by the literal scale-pairing formula above. These path maps are almost-everywhere measurable and converge in law to that Wiener law as real $L\to\infty$, in the supremum norm topology, including the scale times $0$ and $S$. (Note, Theorem C, p. 3.)
+
+26. **[The GFF tangent](../Critical2DKPZStatements/Extensions/ExistsUniqueFiniteGffLawKPZMicroscopic.lean)** — For every fixed $x\in\mathbb R^2$, $n\ge0$ and real smooth compactly supported tests $f_1,\ldots,f_n$ with $\int f_i=0$, there is a unique centred Gaussian probability law on $\mathbb R^n$ with covariance $Q(f_i,f_j)$, and $(\sqrt{\log(1/\varepsilon)}H_t^\vartheta(f_{i,\varepsilon}^{(x)}))_i$ converges in law to it as real $\varepsilon\downarrow0$. It includes zero and repeated tests and degenerate Gaussian laws. This is finite-dimensional convergence on zero-integral tests, without a distribution-space convergence assertion. (Note, Theorem D, p. 3.)

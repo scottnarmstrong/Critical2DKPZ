@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run Lean's transitive axiom audit for the 22 published theorem exports.
+"""Run Lean's transitive axiom audit for the 26 published theorem exports.
 
 Run after building Critical2DKPZ and Critical2DKPZStatements; the script locates
 the repository root itself and uses only Lean and Python's standard library.
@@ -31,7 +31,11 @@ MODULES = ('Critical2DKPZStatements.BlockMoments',
  'Critical2DKPZStatements.ShfLogNormality',
  'Critical2DKPZStatements.ShfSymmetries',
  'Critical2DKPZStatements.SrwLocalCLTGaussianBound',
- 'Critical2DKPZStatements.ThmToyJoint')
+ 'Critical2DKPZStatements.ThmToyJoint',
+ 'Critical2DKPZStatements.Extensions.CriticalKPZCentralMomentThreePos',
+ 'Critical2DKPZStatements.Extensions.InitialResponseExistsUnique',
+ 'Critical2DKPZStatements.Extensions.ExistsUniqueWienerLawKPZScale',
+ 'Critical2DKPZStatements.Extensions.ExistsUniqueFiniteGffLawKPZMicroscopic')
 EXPORTS = ('Critical2DKPZ.exists_isCriticalSHF',
  'Critical2DKPZ.criticalKPZ_main',
  'Critical2DKPZ.criticalKPZ_comparison',
@@ -53,7 +57,11 @@ EXPORTS = ('Critical2DKPZ.exists_isCriticalSHF',
  'Critical2DKPZ.prop_VD',
  'Critical2DKPZ.prop_PF_logTails',
  'Critical2DKPZ.lem_extension_approximation',
- 'Critical2DKPZ.thm_toy_joint')
+ 'Critical2DKPZ.thm_toy_joint',
+ 'Critical2DKPZ.Extensions.criticalKPZ_centralMoment_three_pos',
+ 'Critical2DKPZ.Extensions.initialResponse_existsUnique',
+ 'Critical2DKPZ.Extensions.existsUnique_wienerLaw_and_kpz_scale_tendstoInDistribution',
+ 'Critical2DKPZ.Extensions.existsUnique_finiteGffLaw_and_kpz_microscopic_tendstoInDistribution')
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 
 
@@ -63,12 +71,12 @@ def check_output(log):
         r"'([^']+)' does not depend on any axioms", log)]
     names = [name for name, _ in reports]
     if len(names) != len(EXPORTS) or set(names) != set(EXPORTS):
-        raise ValueError("Expected exactly one axiom report for each of the 22 exports")
+        raise ValueError("Expected exactly one axiom report for each of the 26 exports")
     for name, axioms in reports:
         unexpected = {x.strip() for x in axioms.split(",") if x.strip()} - ALLOWED
         if unexpected:
             raise ValueError(f"{name}: unexpected axioms {sorted(unexpected)}")
-    print("AXIOM AUDIT OK (22 theorem exports; only propext, Classical.choice, Quot.sound)")
+    print("AXIOM AUDIT OK (26 theorem exports; only propext, Classical.choice, Quot.sound)")
 
 
 def main():

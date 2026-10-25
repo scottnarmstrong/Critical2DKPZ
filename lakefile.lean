@@ -23,7 +23,7 @@ lean_lib «Critical2DKPZ» where
   globs := #[.andSubmodules `Critical2DKPZ]
   leanOptions := projectLeanOptions
 
-/-- The 22 theorem statements listed in docs/main-results.md, one per module. -/
+/-- The 26 theorem statements listed in docs/main-results.md, one per module. -/
 lean_lib «Critical2DKPZStatements» where
   globs := #[.submodules `Critical2DKPZStatements]
   leanOptions := projectLeanOptions
